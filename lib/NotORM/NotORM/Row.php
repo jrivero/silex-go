@@ -2,7 +2,7 @@
 
 /** Single row representation
 */
-class NotORM_Row extends NotORM_Abstract implements IteratorAggregate, ArrayAccess {
+class NotORM_Row extends NotORM_Abstract implements IteratorAggregate, ArrayAccess, Countable {
 	private $modified = array();
 	protected $row, $result;
 	
@@ -94,7 +94,8 @@ class NotORM_Row extends NotORM_Abstract implements IteratorAggregate, ArrayAcce
 	
 	protected function access($key, $delete = false) {
 		if ($this->result->notORM->cache && !isset($this->modified[$key]) && $this->result->access($key, $delete)) {
-			$this->row = $this->result[$this->row[$this->result->primary]]->row;
+			$id = (isset($this->row[$this->result->primary]) ? $this->row[$this->result->primary] : $this->row);
+			$this->row = $this->result[$id]->row;
 		}
 	}
 	
@@ -103,6 +104,12 @@ class NotORM_Row extends NotORM_Abstract implements IteratorAggregate, ArrayAcce
 	function getIterator() {
 		$this->access(null);
 		return new ArrayIterator($this->row);
+	}
+	
+	// Countable implementation
+	
+	function count() {
+		return count($this->row);
 	}
 	
 	// ArrayAccess implementation
