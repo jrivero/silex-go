@@ -1,3 +1,0 @@
-{% block invalid[blockname] %}
-
-{% endblock %}
