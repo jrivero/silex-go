@@ -1,3 +1,6 @@
 [submodule "lib/notorm"]
 	path = lib/notorm
 	url = https://github.com/vrana/notorm.git
+[submodule "lib/Haanga"]
+	path = lib/Haanga
+	url = https://github.com/crodas/Haanga.git
