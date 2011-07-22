@@ -14,20 +14,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 $app = new Silex\Application();
 
+define('ENABLE_LOGGING', false);
+define('ENABLE_SESSION', true);
+
 $app['config'] = $app->share(function() use ($app) {
 	$config_file = __DIR__.'/config/application.json';
     return json_decode(file_get_contents($config_file), true);
 });
 
-if (defined('ENABLE_LOGGING'))
+if (defined('ENABLE_LOGGING') and ENABLE_LOGGING)
 {
-	$this->register(new Silex\Extension\MonologExtension(), array(
+	$app->register(new Silex\Extension\MonologExtension(), array(
 		'monolog.logfile' => __DIR__.'/var/log/dev.log',
 		'monolog.class_path' => __DIR__.'/lib/monolog/src',
 	));
 }
 
-if (defined('ENABLE_SESSION'))
+if (defined('ENABLE_SESSION') and ENABLE_SESSION)
 {
 	$app->register(new Silex\Extension\SessionExtension());
 }
@@ -42,16 +45,17 @@ $app['database'] = $app->share(function() {
     return new NotORM(new PDO('mysql:dbname=test', 'root'));
 });
 
-$app->get('/', function() {
+$app->before(function() use ($app) {
+	if ($app['request']->get('require_authentication')) {	
+		if (null === $user = $app['session']->get('user')) {
+			return $app->redirect('/login');
+    	}
+	}
+});
+
+$app->get('/', function() use ($app) {
+	//$app['monolog']->addDebug('Testing the Monolog logging.');
 	return "Index Page";
-});
-
-$app->get('/{name}', function ($name) {
-    return "Page: $name";
-});
-
-$app->get('/{name}/edit', function ($name) {
-    return "Page: $name (edit)";
 });
 
 $app->get('/hello/{name}', function ($name) {
@@ -64,14 +68,6 @@ $app->get('/test/database', function() use ($app) {
     $entities = $db->entity()->limit(10);
     
 	print_r($entities);
-});
-
-$app->get('/test/view', function () {
-	$user = 'jordi';
-	$url  = 'http://silex/account';
-	$cxt = compact('user', 'url');
-
-	return new Response(Haanga::Load('sample_template.html', $cxt, true));
 });
 
 $app->get('/login', function () use ($app) {
@@ -90,12 +86,25 @@ $app->get('/login', function () use ($app) {
     return $response;
 });
 
-$app->get('/account', function () use ($app) {
-    if (null === $user = $app['session']->get('user')) {
-        return $app->redirect('/login');
-    }
+$app->get('/{name}', function ($name) {
+    return "Page: $name";
+});
 
-    return "Welcome {$user['username']}!";
+$app->get('/{name}/edit', function ($name) {
+    return "Page: $name (edit)";
+})->value('require_authentication', true);
+
+
+$app->get('/test/view', function () {
+	$user = 'jordi';
+	$url  = 'http://silex/account';
+	$cxt = compact('user', 'url');
+
+	return new Response(Haanga::Load('sample_template.html', $cxt, true));
+});
+
+$app->get('/account', function () use ($app) {
+	return "Welcome {$user['username']}!";
 });
 
 $app->error(function (\Exception $e) {
