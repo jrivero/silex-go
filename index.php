@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 
 require_once __DIR__.'/lib/silex/silex.phar';
-require_once __DIR__.'/lib/NotORM/NotORM.php';
+require_once __DIR__.'/lib/notorm/NotORM.php';
 require_once __DIR__.'/lib/Haanga/lib/Haanga.php';
 
 use Silex\Application;
@@ -16,11 +16,6 @@ $app = new Silex\Application();
 
 define('ENABLE_LOGGING', false);
 define('ENABLE_SESSION', true);
-
-$app['config'] = $app->share(function() use ($app) {
-	$config_file = __DIR__.'/config/application.json';
-    return json_decode(file_get_contents($config_file), true);
-});
 
 if (defined('ENABLE_LOGGING') and ENABLE_LOGGING)
 {
@@ -36,9 +31,9 @@ if (defined('ENABLE_SESSION') and ENABLE_SESSION)
 }
 
 Haanga::configure(array(
-	'template_dir'=>__DIR__ . '/' . $app['config']['views']['folder'],
-	'cache_dir'=>__DIR__ . '/' . $app['config']['views']['cache'],
-	'debug'=>$app['config']['views']['debug'],
+	'template_dir'=>__DIR__ . '/views/',
+	'cache_dir'=>__DIR__ . '/var/views/',
+	'debug'=>true,
 ));
 
 $app['database'] = $app->share(function() {
