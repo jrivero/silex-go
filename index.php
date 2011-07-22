@@ -41,7 +41,6 @@ $app['database'] = $app->share(function() {
 });
 
 $app->before(function() use ($app) {
-    print_r($app['request']);
 	if ($app['request']->get('require_authentication')) {	
 		if (null === $user = $app['session']->get('user')) {
 			return $app->redirect('/login');
