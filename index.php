@@ -4,13 +4,14 @@ error_reporting(E_ALL);
 
 require_once __DIR__.'/lib/silex/silex.phar';
 require_once __DIR__.'/lib/notorm/NotORM.php';
-require_once __DIR__.'/lib/Haanga/lib/Haanga.php';
+require_once __DIR__.'/lib/haanga/lib/Haanga.php';
 
 use Silex\Application;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 $app = new Silex\Application();
 
@@ -45,8 +46,7 @@ $app['database'] = $app->share(function() {
 $app->before(function() use ($app) {
 	if ($app['request']->get('require_authentication')) {	
 		if (null === $user = $app['session']->get('user')) {
-			die("require auth...");
-			return $app->redirect('/login');
+			throw new AccessDeniedHttpException("require auth...");
     	}
 	}
 });
@@ -105,11 +105,15 @@ $app->get('/account', function () use ($app) {
 	return "Welcome {$user['username']}!";
 });
 
-$app->error(function (\Exception $e) {
+$app->error(function (\Exception $e) use ($app) {
     if ($e instanceof NotFoundHttpException) {
         return new Response('The requested page could not be found.', 404);
     }
 
+	if ($e instanceof AccessDeniedHttpException) {
+		return $app->redirect('/login');
+	}
+	
     $code = ($e instanceof HttpException) ? $e->getStatusCode() : 500;
     return new Response('We are sorry, but something went terribly wrong: ' . $e->getMessage(), $code);
 });
