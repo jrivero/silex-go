@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 $app = new Silex\Application();
 
-define('ENABLE_LOGGING', false);
+define('ENABLE_LOGGING', true);
 define('ENABLE_SESSION', true);
 
 $app['config'] = $app->share(function() use ($app) {
@@ -25,9 +25,11 @@ $app['config'] = $app->share(function() use ($app) {
 if (defined('ENABLE_LOGGING') and ENABLE_LOGGING)
 {
 	$app->register(new Silex\Extension\MonologExtension(), array(
-		'monolog.logfile' => __DIR__.'/var/log/dev.log',
-		'monolog.class_path' => __DIR__.'/lib/monolog/src',
-	));
+	    'monolog.logfile' => __DIR__.'/var/log/development.log',
+	    'monolog.class_path' => __DIR__.'/lib/monolog/src',
+		//'monolog.name' => 'cars',
+		//'monolog.level' => Logger::INFO,	
+	)); 
 }
 
 if (defined('ENABLE_SESSION') and ENABLE_SESSION)
@@ -48,6 +50,7 @@ $app['database'] = $app->share(function() {
 $app->before(function() use ($app) {
 	if ($app['request']->get('require_authentication')) {	
 		if (null === $user = $app['session']->get('user')) {
+			die("require auth...");
 			return $app->redirect('/login');
     	}
 	}
@@ -90,7 +93,7 @@ $app->get('/{name}', function ($name) {
     return "Page: $name";
 });
 
-$app->get('/{name}/edit', function ($name) {
+$app->get('/{name}/edit', function ($name) use ($app) {
     return "Page: $name (edit)";
 })->value('require_authentication', true);
 
