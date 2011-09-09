@@ -1,6 +1,9 @@
-[submodule "lib/notorm"]
-	path = lib/notorm
+[submodule "vendor/notorm"]
+	path = vendor/notorm
 	url = https://github.com/vrana/notorm.git
-[submodule "lib/haanga"]
-	path = lib/haanga
-	url = https://github.com/crodas/Haanga.git
+[submodule "vendor/Twig"]
+	path = vendor/twig
+	url = https://github.com/fabpot/Twig.git
+[submodule "vendor/monolog"]
+    path = vendor/monolog
+    url = https://github.com/Seldaek/monolog.git
