@@ -1,1 +1,7 @@
 Play around silex, notorm and twig
+
+On start is required create temporal folders
+
+```
+mkdir -p var/{views,log}
+````
