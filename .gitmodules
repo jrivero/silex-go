@@ -5,5 +5,8 @@
 	path = vendor/twig
 	url = https://github.com/fabpot/Twig.git
 [submodule "vendor/monolog"]
-    path = vendor/monolog
-    url = https://github.com/Seldaek/monolog.git
+	path = vendor/monolog
+	url = https://github.com/Seldaek/monolog.git
+[submodule "vendor/twig"]
+	path = vendor/twig
+	url = https://github.com/fabpot/Twig.git
