@@ -1,6 +1,6 @@
 <h1>
-    Hi there, I'm {{user}}
+    Hi there, I'm {{ name }}
     {% if url %}
-        and my URL is <a href="{{url|safe}}">{{url}}</a>
+        and my URL is <a href="{{ url }}">{{ url }}</a>
     {% endif %}
 </h1>

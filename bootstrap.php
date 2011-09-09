@@ -1,14 +1,14 @@
 <?php
 
 use Silex\Application;
-use Silex\Extension\HttpCacheExtension;
+//use Silex\Extension\HttpCacheExtension;
 use Silex\Extension\MonologExtension;
-use Silex\Extension\SessionExtension;
-use Silex\Extension\SymfonyBridgesExtension;
-use Silex\Extension\UrlGeneratorExtension;
+//use Silex\Extension\SessionExtension;
+//use Silex\Extension\SymfonyBridgesExtension;
+//use Silex\Extension\UrlGeneratorExtension;
 use Silex\Extension\TwigExtension;
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+//use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 /*
 require_once __DIR__.'/vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
@@ -36,9 +36,9 @@ if ( $app['debug'] )
 }
 
 // Extensions
-$app->register(new SessionExtension());
+//$app->register(new SessionExtension());
 
-$app->register(new UrlGeneratorExtension());
+//$app->register(new UrlGeneratorExtension());
 
 /*
 $app->register(new SymfonyBridgesExtension(), array(
@@ -50,7 +50,7 @@ $app->register(new MonologExtension(), array(
     'monolog.logfile' => __DIR__.'/var/log/'.(($app['debug']) ? 'development' : 'production').'.log',
     'monolog.class_path' => __DIR__.'/vendor/monolog/src',
 	//'monolog.name' => 'app',
-	'monolog.level' => 300,	
+	//'monolog.level' => 300,	
 ));
 
 $app->register(new TwigExtension(), array(
@@ -69,7 +69,7 @@ $app['memcached'] = $app->share(function () use ($app) {
 
 $app['database'] = $app->share(function() {
     require_once __DIR__.'/vendor/notorm/NotORM.php';
-    return new NotORM(new PDO('mysql:dbname=test', 'root'));
+    return new NotORM(new PDO('mysql:dbname=viciado', 'root'));
 });
 
 return $app;
