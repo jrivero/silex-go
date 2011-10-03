@@ -36,7 +36,7 @@ $app->register(new MonologServiceProvider(), array(
 $app['monolog.level'] = ( $app['debug'] ) ? Monolog\Logger::DEBUG : Monolog\Logger::ERROR;
 
 $app->register(new TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/views',
+    'twig.path' => __DIR__.'/tmp',
     'twig.options' => array('debug' => $app['debug'], 'strict_variables' => $app['debug']),
 	'twig.class_path' => __DIR__.'/vendor/twig/lib'
 ));
