@@ -2,8 +2,6 @@
 
 require_once __DIR__.'/vendor/silex/silex.phar';
 
-use Silex\Application;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -32,7 +30,9 @@ $app->get('/test/database', function() use ($app) {
 
 $app->get('/test/log', function() use ($app) {
 	$app['monolog']->addDebug('Hi!');
-	echo 'added debug log message...';
+	$app['monolog']->addInfo('Hi!');
+	$app['monolog']->addError('Hi!');
+	echo 'added some log messages...';
 });
 
 $app->get('/test/twig', function() use ($app) {
